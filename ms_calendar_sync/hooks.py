@@ -247,3 +247,17 @@ app_license = "mit"
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
 
+doc_events = {
+    "Event": {
+        "after_insert": "ms_calendar_sync.ms_calendar_sync.outgoing.after_insert",
+        "on_update": "ms_calendar_sync.ms_calendar_sync.outgoing.on_update",
+        "on_trash": "ms_calendar_sync.ms_calendar_sync.outgoing.on_trash",
+    }
+}
+scheduler_events = {
+    "cron": {
+        "*/5 * * * *": [
+            "ms_calendar_sync.ms_calendar_sync.incoming.pull_latest"
+        ]
+    }
+}

@@ -1,0 +1,52 @@
+{
+ "doctype": "DocType",
+ "name": "Microsoft Calendar Settings",
+ "module": "MS Calendar Sync",
+ "custom": 0,
+ "issingle": 1,
+ "fields": [
+  {
+   "fieldname": "enabled",
+   "label": "Enabled",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "tenant_id",
+   "label": "Tenant ID",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "client_id",
+   "label": "Client ID",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "client_secret",
+   "label": "Client Secret",
+   "fieldtype": "Password",
+   "reqd": 1
+  },
+  {
+   "fieldname": "redirect_uri",
+   "label": "Redirect URI",
+   "fieldtype": "Data",
+   "reqd": 1
+  }
+ ],
+ "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "delete": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "print": 1,
+      "share": 1
+    }
+  ]
+}

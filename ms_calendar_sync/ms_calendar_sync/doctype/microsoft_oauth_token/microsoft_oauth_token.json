@@ -1,0 +1,44 @@
+{
+ "doctype": "DocType",
+ "name": "Microsoft OAuth Token",
+ "module": "MS Calendar Sync",
+ "custom": 0,
+ "fields": [
+  {
+   "fieldname": "user",
+   "label": "User",
+   "fieldtype": "Link",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "access_token",
+   "label": "Access Token",
+   "fieldtype": "Password"
+  },
+  {
+   "fieldname": "refresh_token",
+   "label": "Refresh Token",
+   "fieldtype": "Password"
+  },
+  {
+   "fieldname": "expires_on",
+   "label": "Expires On",
+   "fieldtype": "Datetime"
+  }
+ ],
+ "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "delete": 1,
+      "report": 1,
+      "export": 1,
+      "email": 1,
+      "print": 1,
+      "share": 1
+    }
+  ]
+}

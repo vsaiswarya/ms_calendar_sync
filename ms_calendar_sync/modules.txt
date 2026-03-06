@@ -1,1 +1,1 @@
-ms_calendar_sync
+MS Calendar Sync
