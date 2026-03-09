@@ -5,7 +5,8 @@ from ms_calendar_sync.ms_calendar_sync import graph
 @frappe.whitelist()
 def pull_latest(top=50):
     """Pull latest Microsoft calendar events into ERPNext Event."""
-    user = "Administrator"  # change if you want another ERPNext user
+    settings = frappe.get_single("Microsoft Calendar Settings")
+    user = settings.sync_user or frappe.session.user
 
     data = graph.get(
         user,
@@ -68,3 +69,4 @@ def pull_latest(top=50):
 
     frappe.db.commit()
     return {"created": created, "updated": updated}
+

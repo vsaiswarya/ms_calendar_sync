@@ -33,7 +33,13 @@
    "label": "Redirect URI",
    "fieldtype": "Data",
    "reqd": 1
-  }
+  },
+  {
+ "fieldname": "sync_user",
+ "label": "Sync User",
+ "fieldtype": "Link",
+ "options": "User"
+}
  ],
  "permissions": [
     {
