@@ -34,14 +34,16 @@ def get_login_url(user=None):
 
 @frappe.whitelist(allow_guest=True)
 def callback():
-    """Azure redirect comes here. Stores tokens in Microsoft OAuth Token for the user in state."""
-    code = frappe.form_dict.get("code")
-    user = frappe.form_dict.get("state")
+    """Azure OAuth redirect endpoint"""
+
+    code = frappe.request.args.get("code")
+    user = frappe.request.args.get("state")
 
     if not code or not user:
         return "Missing code/state"
 
     s = _settings()
+
     token_url = f"https://login.microsoftonline.com/{s.tenant_id}/oauth2/v2.0/token"
 
     payload = {
@@ -58,37 +60,33 @@ def callback():
     }
 
     r = requests.post(token_url, data=payload, headers=headers, timeout=30)
+
     if r.status_code >= 400:
-        frappe.log_error(
-            f"Status: {r.status_code}\nURL: {token_url}\nBody: {r.text}",
-            "MS OAuth Token Error",
-        )
-        frappe.throw("Token exchange failed. Open Error Log: MS OAuth Token Error")
+        frappe.log_error(r.text, "MS OAuth Token Error")
+        frappe.throw("Token exchange failed")
 
     j = r.json()
-
-    frappe.log_error(f"Saving Microsoft token for ERPNext user: {user}", "MS OAuth Save User")
 
     name = frappe.db.get_value("Microsoft OAuth Token", {"user": user}, "name")
 
     if name:
         doc = frappe.get_doc("Microsoft OAuth Token", name)
-        doc.access_token = j.get("access_token")
-        doc.refresh_token = j.get("refresh_token")
-        doc.expires_on = datetime.utcnow() + timedelta(seconds=int(j.get("expires_in", 3600)) - 60)
-        doc.save(ignore_permissions=True)
     else:
         doc = frappe.get_doc({
             "doctype": "Microsoft OAuth Token",
-            "user": user,
-            "access_token": j.get("access_token"),
-            "refresh_token": j.get("refresh_token"),
-            "expires_on": datetime.utcnow() + timedelta(seconds=int(j.get("expires_in", 3600)) - 60),
+            "user": user
         })
-        doc.insert(ignore_permissions=True)
 
+    doc.access_token = j.get("access_token")
+    doc.refresh_token = j.get("refresh_token")
+
+    doc.expires_on = datetime.utcnow() + timedelta(
+        seconds=int(j.get("expires_in", 3600)) - 60
+    )
+
+    doc.save(ignore_permissions=True)
     frappe.db.commit()
 
-    frappe.log_error(f"Saved token row: {doc.name} for user: {user}", "MS OAuth Save Success")
-
-    return {"message": "Microsoft connected successfully. You can close this window."}
+  
+    frappe.local.response["type"] = "redirect"
+    frappe.local.response["location"] = "/app/microsoft-calendar-settings?connected=1"
