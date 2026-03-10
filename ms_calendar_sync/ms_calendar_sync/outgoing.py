@@ -8,8 +8,20 @@ def _map_attendees(doc):
     attendees = []
 
     for row in (doc.event_participants or []):
-        email = getattr(row, "email", None)
-        if not email or "@" not in email:
+        email = None
+
+        if row.reference_doctype == "User":
+            email = frappe.db.get_value("User", row.reference_docname, "email")
+
+        elif row.reference_doctype == "Employee":
+            user_id = frappe.db.get_value("Employee", row.reference_docname, "user_id")
+            if user_id:
+                email = frappe.db.get_value("User", user_id, "email")
+
+        elif row.email:
+            email = row.email
+
+        if not email:
             continue
 
         attendees.append({
