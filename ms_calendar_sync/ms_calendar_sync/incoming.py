@@ -139,7 +139,15 @@ def sync_all_users(top=50):
             total_updated += result["updated"]
         except Exception:
             failed.append(user)
-            frappe.log_error(frappe.get_traceback(), f"MS Calendar Sync Failed - {user}")
+            frappe.log_error(
+                title=f"MS Calendar Sync Failed - {user}",
+                message=frappe.get_traceback()
+            )
+
+    frappe.log_error(
+        title="MS Sync Summary",
+        message=f"users={users}\ncreated={total_created}\nupdated={total_updated}\nfailed={failed}"
+    )
 
     return {
         "created": total_created,
