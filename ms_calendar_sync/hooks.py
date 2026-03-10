@@ -254,10 +254,11 @@ doc_events = {
         "on_trash": "ms_calendar_sync.ms_calendar_sync.outgoing.on_trash",
     }
 }
+
 scheduler_events = {
     "cron": {
         "*/5 * * * *": [
-            "ms_calendar_sync.ms_calendar_sync.incoming.pull_latest"
+            "ms_calendar_sync.ms_calendar_sync.incoming.sync_all_users"
         ]
     }
 }
