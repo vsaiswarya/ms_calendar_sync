@@ -26,27 +26,31 @@ def _append_participants(doc, attendees):
 
         attending = _map_attending_status(attendee)
 
-        # Try to link to ERPNext User first
+        # Try ERPNext User first
         user_name = frappe.db.get_value("User", {"email": email}, "name")
         if user_name:
-            reference_doctype = "User"
-            reference_docname = user_name
-        else:
-            # Optional: try Contact by email_id if your site uses Contact records
-            contact_name = frappe.db.get_value("Contact Email", {"email_id": email}, "parent")
-            if contact_name:
-                reference_doctype = "Contact"
-                reference_docname = contact_name
-            else:
-                reference_doctype = ""
-                reference_docname = ""
+            doc.append("event_participants", {
+                "reference_doctype": "User",
+                "reference_docname": user_name,
+                "email": email,
+                "attending": attending
+            })
+            continue
 
-        doc.append("event_participants", {
-            "reference_doctype": reference_doctype,
-            "reference_docname": reference_docname,
-            "email": email,
-            "attending": attending
-        })
+        # Try Contact next
+        contact_name = frappe.db.get_value("Contact Email", {"email_id": email}, "parent")
+        if contact_name:
+            doc.append("event_participants", {
+                "reference_doctype": "Contact",
+                "reference_docname": contact_name,
+                "email": email,
+                "attending": attending
+            })
+            continue
+
+        # If no User/Contact exists, skip this attendee
+        # because reference_doctype and reference_docname are mandatory
+        continue
 
 
 def _upsert_event(user, ev):
