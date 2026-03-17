@@ -6,21 +6,21 @@ def execute():
     fields = {
         "Event": [
             {
-                "fieldname": "ms_event_id",
+                "fieldname": "custom_ms_event_id",
                 "label": "MS Event ID",
                 "fieldtype": "Small Text",
                 "insert_after": "subject",
                 "read_only": 1,
             },
             {
-                "fieldname": "ms_ical_uid",
+                "fieldname": "custom_ms_ical_uid",
                 "label": "MS iCal UID",
                 "fieldtype": "Small Text",
                 "insert_after": "ms_event_id",
                 "read_only": 1,
             },
             {
-                "fieldname": "ms_source",
+                "fieldname": "custom_ms_source",
                 "label": "MS Source",
                 "fieldtype": "Select",
                 "options": "ERPNext\nM365",
@@ -28,7 +28,7 @@ def execute():
                 "read_only": 1,
             },
             {
-                "fieldname": "ms_skip_push",
+                "fieldname": "custom_ms_skip_push",
                 "label": "MS Skip Push",
                 "fieldtype": "Check",
                 "insert_after": "ms_source",
