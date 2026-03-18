@@ -65,23 +65,23 @@ def _upsert_event(user, ev):
     if not ms_id:
         return {"created": 0, "updated": 0}
 
-    name = frappe.db.get_value("Event", {"ms_event_id": ms_id}, "name")
+    name = frappe.db.get_value("Event", {"custom_ms_event_id": ms_id}, "name")
 
     if name:
         doc = frappe.get_doc("Event", name)
-        doc.ms_skip_push = 1
+        doc.custom_ms_skip_push = 1
         doc.subject = subject
         doc.description = body_preview
         doc.status = "Open"
         doc.event_type = "Public"
-        doc.ms_source = "M365"
+        doc.custom_ms_source = "M365"
 
         if start:
             doc.starts_on = start
         if end:
             doc.ends_on = end
         if ical_uid:
-            doc.ms_ical_uid = ical_uid
+            doc.custom_ms_ical_uid = ical_uid
 
         _append_participants(doc, attendees)
 
@@ -97,10 +97,10 @@ def _upsert_event(user, ev):
         "status": "Open",
         "event_type": "Public",
         "owner": user,
-        "ms_event_id": ms_id,
-        "ms_ical_uid": ical_uid,
-        "ms_source": "M365",
-        "ms_skip_push": 1,
+        "custom_ms_event_id": ms_id,
+        "custom_ms_ical_uid": ical_uid,
+        "custom_ms_source": "M365",
+        "custom_ms_skip_push": 1,
     })
 
     _append_participants(doc, attendees)
