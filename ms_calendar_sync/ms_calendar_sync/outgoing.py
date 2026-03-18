@@ -63,18 +63,18 @@ def _event_user(doc):
 
 def after_insert(doc, method=None):
     try:
-        if getattr(doc, "ms_skip_push", 0):
+        if getattr(doc, "custom_ms_skip_push", 0):
             return
 
         user = _event_user(doc)
 
-        if getattr(doc, "ms_event_id", None):
+        if getattr(doc, "custom_ms_event_id", None):
             return
 
         res = graph.post(user, "/me/events", _payload(doc))
-        doc.db_set("ms_event_id", res.get("id"))
-        doc.db_set("ms_ical_uid", res.get("iCalUId"))
-        doc.db_set("ms_source", "ERPNext")
+        doc.db_set("custom_ms_event_id", res.get("id"))
+        doc.db_set("custom_ms_ical_uid", res.get("iCalUId"))
+        doc.db_set("custom_ms_source", "ERPNext")
 
     except Exception:
         frappe.log_error(frappe.get_traceback(), "MS Event Push Error")
@@ -82,11 +82,11 @@ def after_insert(doc, method=None):
 
 def on_update(doc, method=None):
     try:
-        if getattr(doc, "ms_skip_push", 0):
+        if getattr(doc, "custom_ms_skip_push", 0):
             return
 
         user = _event_user(doc)
-        ms_event_id = getattr(doc, "ms_event_id", None)
+        ms_event_id = getattr(doc, "custom_ms_event_id", None)
 
         if not ms_event_id:
             return
@@ -99,11 +99,11 @@ def on_update(doc, method=None):
 
 def on_trash(doc, method=None):
     try:
-        if getattr(doc, "ms_skip_push", 0):
+        if getattr(doc, "custom_ms_skip_push", 0):
             return
 
         user = _event_user(doc)
-        ms_event_id = getattr(doc, "ms_event_id", None)
+        ms_event_id = getattr(doc, "custom_ms_event_id", None)
 
         if not ms_event_id:
             return
